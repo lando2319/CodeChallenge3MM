@@ -23,17 +23,9 @@
     NSURL *url = [NSURL URLWithString:@"http://www.divvybikes.com/stations/json"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-
-
-
-
         NSDictionary *divvyDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&connectionError];
-
-//        NSLog(@"%@", divvyDictionary);
-
+        NSLog(@"%@", connectionError);
         self.divvyStations = [divvyDictionary objectForKey:@"stationBeanList"];
-        NSLog(@"%@", self.divvyStations);
-
         [self.tableView reloadData];
 
     }];
@@ -50,11 +42,8 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    
-    cell.textLabel.text = @"toasty";
-//    NSLog(@"%@", [self.divvyStations objectAtIndex:@"stationBeanList"]);
-//    NSLog(@"%@", self.divvyStations.stationBeanList);
-//    cell.textLabel.text = [self.divvyStations objectAtIndex:indexPath.row];
+    cell.textLabel.text = [[self.divvyStations objectAtIndex:indexPath.row] objectForKey:@"stAddress1"];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", [[self.divvyStations objectAtIndex:indexPath.row] objectForKey:@"availableBikes"]];
     return cell;
 }
 
